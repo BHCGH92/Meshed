@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 class Department(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -44,3 +47,13 @@ class CompanySettings(models.Model):
     def get(cls):
         obj, created = cls.objects.get_or_create(pk=1)
         return obj
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        company = CompanySettings.get()
+        UserProfile.objects.create(
+            user=instance,
+            contracted_hours=company.default_contracted_hours,
+            holiday_allowance=company.default_holiday_allowance,
+        )

@@ -97,11 +97,17 @@ This project is under active development, built incrementally and reviewed step 
 - [x] `accounts` app data model:
   - `Department` — a configurable list of departments
   - `UserProfile` — role, weekly contracted hours, holiday allowance, department, approver
-  - `CompanySettings` — a singleton record for company-wide defaults (name, logo, default hours/allowance)
+  - `CompanySettings` — a singleton record for company-wide defaults (name, logo, default hours/allowance, whether weekends count toward holiday day totals)
   - A signal that automatically creates a `UserProfile` whenever a new `User` account is created
 - [x] `Department`, `UserProfile`, and `CompanySettings` registered in Django admin
+- [x] `holidays` app data model:
+  - `HolidayRequest` — an employee's submitted request (dates, type, status, reviewer/rejection info)
+  - `CompanyHoliday` — admin-set company-wide closures (e.g. Christmas)
+  - Both calculate working-day counts based on the company's weekend-counting setting
+- [x] `HolidayRequest` and `CompanyHoliday` registered in Django admin
+- [x] Migrations run for the `include_weekends` field and the new `holidays` models
 - [ ] Authentication — login (username or email), logout, password reset
-- [ ] `holidays` app data model and views
+- [ ] `holidays` app views (submit/approve/reject requests, team calendar, company closures admin page)
 - [ ] `timekeeping` app data model and views
 - [ ] Remaining feature build-out against the project spec
 
@@ -112,5 +118,6 @@ This project is under active development, built incrementally and reviewed step 
 - **No public self-registration.** Accounts are created by an Admin only.
 - **Holiday approval is currently open to any Manager/Admin**, not restricted to a specific approver — this may be made more granular later. The `approver` field on `UserProfile` already exists to support that in future, it just isn't enforced by any view logic yet.
 - **Departments are a proper model, not a hardcoded list** — an Admin will be able to add/rename/remove departments without any code changes.
+- **Whether weekends count toward holiday day totals is a company-wide setting** (`CompanySettings.weekend_counter`), not hardcoded — defaults to off (weekends excluded), but a company can switch it on. Applies consistently to both individual holiday requests and company-wide closures.
 
 [↑ To Contents](#table-of-contents)

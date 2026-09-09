@@ -14,5 +14,5 @@ class DepartmentAdmin(admin.ModelAdmin):
 
 @admin.register(CompanySettings)
 class CompanySettingsAdmin(admin.ModelAdmin):
-    list_display = ('name', 'logo', 'default_contracted_hours', 'default_holiday_allowance')
+    list_display = ('name', 'logo', 'default_contracted_hours', 'default_holiday_allowance', 'include_weekends')
     search_fields = ('name',)

@@ -39,6 +39,7 @@ class CompanySettings(models.Model):
     logo = models.ImageField(upload_to='company_logos/', blank=True, null=True)
     default_contracted_hours = models.DecimalField(default=37, max_digits=4, decimal_places=1) # Default to 37 hours per week
     default_holiday_allowance = models.PositiveSmallIntegerField(default=28) # UK Minimum holiday allowance is 28 days for full-time employees
+    include_weekends = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'timekeeping',
     'accounts',
     'holidays',
+    'axes',
 ]
 
 MIDDLEWARE = [
@@ -44,7 +45,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_htmx.middleware.HtmxMiddleware'
+    'django_htmx.middleware.HtmxMiddleware',
+    'axes.middleware.AxesMiddleware',   # Must be last — axes needs every other middleware to run first
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -100,6 +102,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# axes must come first — it needs to intercept every login attempt before Django's own backend processes it
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesStandaloneBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -137,3 +145,11 @@ if not DEBUG:
 
 SECURE_BROWSER_XSS_FILTER = True               # Enables older browsers' built-in XSS filter (legacy; modern browsers ignore this)
 SECURE_CONTENT_TYPE_NOSNIFF = True             # Stop browsers guessing a file's type — protects against a malicious "image" upload being run as a script
+
+SESSION_COOKIE_AGE = 172800                    # Log a user out 2 days after login (internal tool — chosen over the 8-hour enterprise standard for convenience)
+
+# ---- django-axes: brute-force login protection ----
+AXES_FAILURE_LIMIT = 5                         # Lock out after 5 failed login attempts
+AXES_COOLOFF_TIME = 1                          # Lockout lasts 1 hour before the count resets
+AXES_LOCKOUT_PARAMETERS = ['username']         # Lock by username, not IP — avoids locking out the whole office over a shared IP
+AXES_RESET_ON_SUCCESS = True                   # A successful login clears someone's failure count back to zero

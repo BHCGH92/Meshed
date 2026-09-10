@@ -113,6 +113,8 @@ This project is under active development, built incrementally and reviewed step 
 - [x] `TimeEntry`, `BreakEntry`, and `TimeAuditEntry` registered in Django admin
 - [x] Migrations run for the `timekeeping` app
 - [x] Production-only security headers (HSTS, SSL redirect, secure cookies, content-type sniffing protection) added to `settings.py`, gated behind `if not DEBUG`
+- [x] `SESSION_COOKIE_AGE` set to 2 days (internal tool — chosen over the shorter 8-hour enterprise standard for convenience)
+- [x] `django-axes` installed for brute-force login protection — locks an account after 5 failed attempts, 1-hour cooldown, tracked by username
 - [ ] Authentication — login (username or email), logout, password reset
 - [ ] `holidays` app views (submit/approve/reject requests, team calendar, company closures admin page)
 - [ ] `timekeeping` app views (clock in/out, timesheet, audit log)
@@ -127,5 +129,7 @@ This project is under active development, built incrementally and reviewed step 
 - **Departments are a proper model, not a hardcoded list** — an Admin will be able to add/rename/remove departments without any code changes.
 - **Whether weekends count toward holiday day totals is a company-wide setting** (`CompanySettings.include_weekends`), not hardcoded — defaults to off (weekends excluded), but a company can switch it on. Applies consistently to both individual holiday requests and company-wide closures.
 - **Managers, not just Admins, can edit any employee's timesheet.** This is a deliberate widening of the original spec (which only mentioned Admins) based on real usage — Employees can only edit their own entries.
+- **`django-axes` locks by username only, not IP address** — a deliberate tradeoff. It avoids one person's mistyped password accidentally locking out the whole office (likely sharing one IP), at the cost of not rate-limiting an attacker who sprays guesses across many different usernames. Accepted given this is a small internal tool, not a public-facing target. `AXES_LOCKOUT_PARAMETERS` in `settings.py` is where this would change if that judgement call is ever revisited.
+- **2FA for Admin accounts is deliberately deferred**, not rejected — noted as a real gap to revisit later, not forgotten.
 
 [↑ To Contents](#table-of-contents)

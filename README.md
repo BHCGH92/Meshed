@@ -106,9 +106,15 @@ This project is under active development, built incrementally and reviewed step 
   - Both calculate working-day counts based on the company's weekend-counting setting
 - [x] `HolidayRequest` and `CompanyHoliday` registered in Django admin
 - [x] Migrations run for the `include_weekends` field and the new `holidays` models
+- [x] `timekeeping` app data model:
+  - `TimeEntry` — one per person per calendar day, clock-in/out, plus hours-worked and current clock-state calculations
+  - `BreakEntry` — individual breaks belonging to a time entry (a day can have several)
+  - `TimeAuditEntry` — a record created whenever someone manually edits a time entry
+- [x] `TimeEntry`, `BreakEntry`, and `TimeAuditEntry` registered in Django admin
+- [ ] Run migrations for the `timekeeping` app
 - [ ] Authentication — login (username or email), logout, password reset
 - [ ] `holidays` app views (submit/approve/reject requests, team calendar, company closures admin page)
-- [ ] `timekeeping` app data model and views
+- [ ] `timekeeping` app views (clock in/out, timesheet, audit log)
 - [ ] Remaining feature build-out against the project spec
 
 [↑ To Contents](#table-of-contents)
@@ -118,6 +124,7 @@ This project is under active development, built incrementally and reviewed step 
 - **No public self-registration.** Accounts are created by an Admin only.
 - **Holiday approval is currently open to any Manager/Admin**, not restricted to a specific approver — this may be made more granular later. The `approver` field on `UserProfile` already exists to support that in future, it just isn't enforced by any view logic yet.
 - **Departments are a proper model, not a hardcoded list** — an Admin will be able to add/rename/remove departments without any code changes.
-- **Whether weekends count toward holiday day totals is a company-wide setting** (`CompanySettings.weekend_counter`), not hardcoded — defaults to off (weekends excluded), but a company can switch it on. Applies consistently to both individual holiday requests and company-wide closures.
+- **Whether weekends count toward holiday day totals is a company-wide setting** (`CompanySettings.include_weekends`), not hardcoded — defaults to off (weekends excluded), but a company can switch it on. Applies consistently to both individual holiday requests and company-wide closures.
+- **Managers, not just Admins, can edit any employee's timesheet.** This is a deliberate widening of the original spec (which only mentioned Admins) based on real usage — Employees can only edit their own entries.
 
 [↑ To Contents](#table-of-contents)

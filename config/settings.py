@@ -124,3 +124,16 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# ---- Security headers (active in production only — would break local HTTP dev) ----
+if not DEBUG:
+    SECURE_HSTS_SECONDS = 31536000            # Tell browsers to only ever use HTTPS with this site, for 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True      # Extend that same HTTPS-only rule to all subdomains too
+    SECURE_HSTS_PRELOAD = True                 # Opt in to browsers' built-in preload list, protecting even a visitor's very first visit
+    SECURE_SSL_REDIRECT = True                 # Automatically redirect any plain http:// request to https://
+    SESSION_COOKIE_SECURE = True               # Only ever send the login session cookie over HTTPS
+    CSRF_COOKIE_SECURE = True                  # Only ever send the CSRF protection cookie over HTTPS
+
+SECURE_BROWSER_XSS_FILTER = True               # Enables older browsers' built-in XSS filter (legacy; modern browsers ignore this)
+SECURE_CONTENT_TYPE_NOSNIFF = True             # Stop browsers guessing a file's type — protects against a malicious "image" upload being run as a script

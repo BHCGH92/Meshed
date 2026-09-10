@@ -111,7 +111,8 @@ This project is under active development, built incrementally and reviewed step 
   - `BreakEntry` — individual breaks belonging to a time entry (a day can have several)
   - `TimeAuditEntry` — a record created whenever someone manually edits a time entry
 - [x] `TimeEntry`, `BreakEntry`, and `TimeAuditEntry` registered in Django admin
-- [ ] Run migrations for the `timekeeping` app
+- [x] Migrations run for the `timekeeping` app
+- [x] Production-only security headers (HSTS, SSL redirect, secure cookies, content-type sniffing protection) added to `settings.py`, gated behind `if not DEBUG`
 - [ ] Authentication — login (username or email), logout, password reset
 - [ ] `holidays` app views (submit/approve/reject requests, team calendar, company closures admin page)
 - [ ] `timekeeping` app views (clock in/out, timesheet, audit log)

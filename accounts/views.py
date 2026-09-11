@@ -1,3 +1,9 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def company_info(request):
+    return render(request, 'placeholder.html', {'page_name': 'Company Info'})
+
+
+def admin_user_list(request):
+    return render(request, 'placeholder.html', {'page_name': 'User Management'})

@@ -9,6 +9,7 @@ This project is a ground-up rebuild of an earlier HR system. Rather than refacto
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
 - [Local Setup](#local-setup)
+- [Branding](#branding)
 - [Current Status](#current-status)
 - [Design Decisions Worth Knowing](#design-decisions-worth-knowing)
 
@@ -86,6 +87,38 @@ Meshed/
 
 [↑ To Contents](#table-of-contents)
 
+## Branding
+
+Direction: **Slate & Verdant**. Warm and human rather than corporate-blue — the accent reads as time off and wellbeing, fitting for an HR tool. Two full themes (light + dark), not a light palette with a dark navbar bolted on. Reference mockup with a working toggle: see the pinned "Meshed brand options" artifact.
+
+**Typography**
+- Display (headings): [Fraunces](https://fonts.google.com/specimen/Fraunces) — a soft, slightly warm serif, used with restraint (weight 500, not bold)
+- Body: [Karla](https://fonts.google.com/specimen/Karla) — clean humanist sans
+
+**Logo mark** — three connected points, a minimal mesh-network shape. Two files, for two different jobs:
+- `static/img/logo-mark.svg` — fixed accent-green, transparent background. For anything outside the live app (favicon source, docs, README).
+- `templates/partials/logo_mark.html` — same shape using `currentColor`, meant to be pulled into templates with `{% include 'partials/logo_mark.html' %}` so it inherits whichever theme color surrounds it, rather than being a static image.
+
+**Colour tokens**
+
+| Token | Light | Dark |
+|---|---|---|
+| `accent` | `#155C3D` | `#4FAE7C` |
+| `card` | `#DCEAE1` | `#1F2D22` |
+| `ink` (text) | `#16211A` | `#E9EDE9` |
+| `muted` (secondary text) | `#57615A` | `#97A199` |
+| `bg` (page) | `#F5F7F4` | `#131A14` |
+| `nav` | `#16241C` | `#0E130F` |
+
+Note the accent is **not** the same hex in both modes — the light-mode green doesn't have enough contrast against a dark background on its own, so dark mode uses a brighter step of the same hue rather than reusing one fixed value everywhere. This is the pattern to follow for any other colour added later: pick a light and a dark step of the same hue, don't just invert one value.
+
+**Rules for building against this**
+- Every new template/component uses these tokens (via Tailwind theme config, once wired up) — no ad-hoc hex values in templates.
+- Dark mode is a first-class toggle, not an afterthought — matches the old app's own light/dark switch in the navbar, same interaction pattern.
+- Headings use Fraunces sparingly (page titles, key numbers) — body copy, labels, and UI chrome stay in Karla. Don't let the display face creep into dense UI text.
+
+[↑ To Contents](#table-of-contents)
+
 ## Current status
 
 This project is under active development, built incrementally and reviewed step by step.
@@ -115,6 +148,9 @@ This project is under active development, built incrementally and reviewed step 
 - [x] Production-only security headers (HSTS, SSL redirect, secure cookies, content-type sniffing protection) added to `settings.py`, gated behind `if not DEBUG`
 - [x] `SESSION_COOKIE_AGE` set to 2 days (internal tool — chosen over the shorter 8-hour enterprise standard for convenience)
 - [x] `django-axes` installed for brute-force login protection — locks an account after 5 failed attempts, 1-hour cooldown, tracked by username
+- [x] GitHub Dependabot alerts enabled (repo setting, not code — flags known vulnerabilities in dependencies)
+- [x] Branding locked in — Slate & Verdant, light + dark themes, Fraunces/Karla (see [Branding](#branding))
+- [ ] Wire the branding tokens into Tailwind config
 - [ ] Authentication — login (username or email), logout, password reset
 - [ ] `holidays` app views (submit/approve/reject requests, team calendar, company closures admin page)
 - [ ] `timekeeping` app views (clock in/out, timesheet, audit log)

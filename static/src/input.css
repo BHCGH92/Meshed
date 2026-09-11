@@ -1,1 +1,33 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  --color-accent: #155C3D;
+  --color-card: #DCEAE1;
+  --color-ink: #16211A;
+  --color-muted: #57615A;
+  --color-bg: #F5F7F4;
+  --color-nav: #16241C;
+  --color-nav-text: #EAF1EC;
+}
+
+[data-theme="dark"] {
+  --color-accent: #4FAE7C;
+  --color-card: #1F2D22;
+  --color-ink: #E9EDE9;
+  --color-muted: #97A199;
+  --color-bg: #131A14;
+  --color-nav: #0E130F;
+  --color-nav-text: #E7EEE8;
+}
+
+@theme inline {
+  --color-accent: var(--color-accent);
+  --color-card: var(--color-card);
+  --color-ink: var(--color-ink);
+  --color-muted: var(--color-muted);
+  --color-bg: var(--color-bg);
+  --color-nav: var(--color-nav);
+  --color-nav-text: var(--color-nav-text);
+}

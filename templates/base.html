@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Meshed{% endblock %}</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Karla:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+    {% block extra_css %}{% endblock %}
+    <script>
+        (function () {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+</head>
+<body>
+
+<nav x-data="{ open: false }" class="bg-nav text-nav-text">
+    <div class="flex items-center justify-between px-4 py-3">
+        <a href="{% url 'home' %}" class="flex items-center gap-2 font-semibold text-lg">
+            {% include 'partials/logo_mark.html' %}
+            <span>Meshed</span>
+        </a>
+
+        {% if user.is_authenticated %}
+        <button @click="open = !open" class="md:hidden text-3xl leading-none" aria-label="Toggle menu">
+            &#9776;
+        </button>
+
+        {# Desktop nav #}
+        <ul class="hidden md:flex md:items-center md:gap-6">
+            <li><a href="{% url 'home' %}">Dashboard</a></li>
+            <li><a href="{% url 'timesheet' %}">Timesheet</a></li>
+            <li><a href="{% url 'holiday_calendar' %}">Calendar</a></li>
+            <li><a href="{% url 'my_requests' %}">My Holidays</a></li>
+            {% if user.profile.is_manager %}
+            <li x-data="{ managerOpen: false }" class="relative">
+                <button @click="managerOpen = !managerOpen">Manager</button>
+                <ul x-show="managerOpen" @click.outside="managerOpen = false" class="absolute bg-nav text-nav-text divide-y divide-white/10 min-w-[180px] rounded shadow-lg">
+                    <li><a href="{% url 'pending_requests' %}" class="block py-2 px-3">Pending Requests</a></li>
+                    <li><a href="{% url 'export_timesheet' %}" class="block py-2 px-3">Export Timesheet</a></li>
+                </ul>
+            </li>
+            {% endif %}
+            {% if user.profile.role == 'Admin' %}
+            <li x-data="{ adminOpen: false }" class="relative">
+                <button @click="adminOpen = !adminOpen">Admin</button>
+                <ul x-show="adminOpen" @click.outside="adminOpen = false" class="absolute bg-nav text-nav-text divide-y divide-white/10 min-w-[180px] rounded shadow-lg">
+                    <li><a href="{% url 'company_info' %}" class="block py-2 px-3">Company Info</a></li>
+                    <li><a href="{% url 'admin_user_list' %}" class="block py-2 px-3">User Management</a></li>
+                    <li><a href="{% url 'company_holidays' %}" class="block py-2 px-3">Company Holidays</a></li>
+                    <li><a href="{% url 'audit_log' %}" class="block py-2 px-3">Audit Log</a></li>
+                </ul>
+            </li>
+        {% endif %}
+        </ul>
+        {% endif %}
+    </div>
+
+    {% if user.is_authenticated %}
+    {# Mobile nav #}
+    <ul x-show="open" class="md:hidden flex flex-col divide-y divide-white/10 px-4 pb-3">
+        <li><a href="{% url 'home' %}" class="block py-2.5">Dashboard</a></li>
+        <li><a href="{% url 'timesheet' %}" class="block py-2.5">Timesheet</a></li>
+        <li><a href="{% url 'holiday_calendar' %}" class="block py-2.5">Calendar</a></li>
+        <li><a href="{% url 'my_requests' %}" class="block py-2.5">My Holidays</a></li>
+        {% if user.profile.is_manager %}
+        <li><a href="{% url 'pending_requests' %}" class="block py-2.5">Pending Requests</a></li>
+        <li><a href="{% url 'export_timesheet' %}" class="block py-2.5">Export Timesheet</a></li>
+        {% endif %}
+        {% if user.profile.role == 'Admin' %}
+        <li><a href="{% url 'company_info' %}" class="block py-2.5">Company Info</a></li>
+        <li><a href="{% url 'admin_user_list' %}" class="block py-2.5">User Management</a></li>
+        <li><a href="{% url 'company_holidays' %}" class="block py-2.5">Company Holidays</a></li>
+        <li><a href="{% url 'audit_log' %}" class="block py-2.5">Audit Log</a></li>
+        {% endif %}
+    </ul>
+    {% endif %}
+</nav>
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<script src="{% static 'js/htmx.min.js' %}"></script>
+<script defer src="{% static 'js/alpine.min.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

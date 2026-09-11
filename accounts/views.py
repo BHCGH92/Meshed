@@ -7,3 +7,7 @@ def company_info(request):
 
 def admin_user_list(request):
     return render(request, 'placeholder.html', {'page_name': 'User Management'})
+
+
+def profile(request):
+    return render(request, 'accounts/profile.html')

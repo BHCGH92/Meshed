@@ -30,4 +30,12 @@
   --color-bg: var(--color-bg);
   --color-nav: var(--color-nav);
   --color-nav-text: var(--color-nav-text);
+  --font-sans: 'Karla', sans-serif;
+  --font-display: 'Fraunces', serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-ink);
 }

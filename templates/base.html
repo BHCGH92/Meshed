@@ -22,7 +22,7 @@
 <nav x-data="{ open: false }" class="bg-nav text-nav-text">
     <div class="flex items-center justify-between px-4 py-3">
         <a href="{% url 'home' %}" class="flex items-center gap-2 font-semibold text-lg">
-            {% include 'partials/logo_mark.html' %}
+            <span class="text-accent">{% include 'partials/logo_mark.html' %}</span>
             <span>Meshed</span>
         </a>
 
@@ -40,7 +40,7 @@
             {% if user.profile.is_manager %}
             <li x-data="{ managerOpen: false }" class="relative">
                 <button @click="managerOpen = !managerOpen">Manager</button>
-                <ul x-show="managerOpen" @click.outside="managerOpen = false" class="absolute bg-nav text-nav-text divide-y divide-white/10 min-w-[180px] rounded shadow-lg">
+                <ul x-show="managerOpen" @click.outside="managerOpen = false" class="absolute right-0 bg-nav text-nav-text divide-y divide-white/10 min-w-[180px] rounded shadow-lg">
                     <li><a href="{% url 'pending_requests' %}" class="block py-2 px-3">Pending Requests</a></li>
                     <li><a href="{% url 'export_timesheet' %}" class="block py-2 px-3">Export Timesheet</a></li>
                 </ul>
@@ -49,7 +49,7 @@
             {% if user.profile.role == 'Admin' %}
             <li x-data="{ adminOpen: false }" class="relative">
                 <button @click="adminOpen = !adminOpen">Admin</button>
-                <ul x-show="adminOpen" @click.outside="adminOpen = false" class="absolute bg-nav text-nav-text divide-y divide-white/10 min-w-[180px] rounded shadow-lg">
+                <ul x-show="adminOpen" @click.outside="adminOpen = false" class="absolute right-0 bg-nav text-nav-text divide-y divide-white/10 min-w-[180px] rounded shadow-lg">
                     <li><a href="{% url 'company_info' %}" class="block py-2 px-3">Company Info</a></li>
                     <li><a href="{% url 'admin_user_list' %}" class="block py-2 px-3">User Management</a></li>
                     <li><a href="{% url 'company_holidays' %}" class="block py-2 px-3">Company Holidays</a></li>
@@ -57,6 +57,21 @@
                 </ul>
             </li>
         {% endif %}
+            <li x-data="{ profileOpen: false }" class="relative">
+                <button @click="profileOpen = !profileOpen" class="w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center text-sm font-semibold" aria-label="Account menu">
+                    {{ user.username|first|upper }}
+                </button>
+                <ul x-show="profileOpen" @click.outside="profileOpen = false" class="absolute right-0 bg-nav text-nav-text divide-y divide-white/10 min-w-[180px] rounded shadow-lg">
+                    <li class="px-3 py-2 text-sm opacity-70">{{ user.get_full_name|default:user.username }}</li>
+                    <li><a href="{% url 'profile' %}" class="block py-2 px-3">Profile</a></li>
+                    <li>
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="block w-full text-left py-2 px-3">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </li>
         </ul>
         {% endif %}
     </div>
@@ -78,6 +93,13 @@
         <li><a href="{% url 'company_holidays' %}" class="block py-2.5">Company Holidays</a></li>
         <li><a href="{% url 'audit_log' %}" class="block py-2.5">Audit Log</a></li>
         {% endif %}
+        <li><a href="{% url 'profile' %}" class="block py-2.5">Profile</a></li>
+        <li>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="block w-full text-left py-2.5">Logout</button>
+            </form>
+        </li>
     </ul>
     {% endif %}
 </nav>
